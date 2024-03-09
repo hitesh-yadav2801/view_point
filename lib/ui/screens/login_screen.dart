@@ -1,8 +1,4 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:view_point/core/constants/my_colors.dart';
 import 'package:view_point/ui/common_widgets/custom_button.dart';
