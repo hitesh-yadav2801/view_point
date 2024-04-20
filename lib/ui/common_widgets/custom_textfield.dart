@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final String? hintText;
   final ValueChanged<String>? onChanged;
   final TextInputType keyboardType;
+  final Icon? prefixIcon;
 
   const CustomTextField({
     Key? key,
@@ -13,6 +14,7 @@ class CustomTextField extends StatelessWidget {
     this.hintText,
     this.onChanged,
     this.keyboardType = TextInputType.text,
+    this.prefixIcon
   }) : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       style: const TextStyle(color: MyColors.blackColor, fontSize: 16.0),
       decoration: InputDecoration(
+        prefixIcon: prefixIcon,
         hintText: hintText,
         hintStyle: const TextStyle(fontSize: 16.0),
         filled: true,

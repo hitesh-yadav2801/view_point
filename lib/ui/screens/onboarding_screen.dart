@@ -23,7 +23,7 @@ class OnboardingScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Lottie.asset(
-                  'lib/core/assets/animations/onboard.json',
+                  'assets/animations/onboard.json',
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: MediaQuery.of(context).size.width * 0.7,
                   fit: BoxFit.cover,
@@ -51,9 +51,12 @@ class OnboardingScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const FAQScreen()));
+                              builder: (context) => const FAQScreen(),
+                            ),
+                          );
                         },
-                    )),
+                      ),
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: CustomButton(
@@ -62,10 +65,12 @@ class OnboardingScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                const InstructionsScreen()));
+                              builder: (context) => const InstructionsScreen(),
+                            ),
+                          );
                         },
-                    )),
+                      ),
+                    ),
                   ],
                 )
               ],

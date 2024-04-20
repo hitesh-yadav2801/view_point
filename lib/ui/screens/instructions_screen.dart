@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:view_point/core/constants/my_colors.dart';
 import 'package:view_point/ui/common_widgets/custom_button.dart';
+import 'package:view_point/ui/screens/category_screen.dart';
 import 'package:view_point/ui/screens/login_screen.dart';
 
 class InstructionsScreen extends StatelessWidget {
-  const InstructionsScreen({Key? key}) : super(key: key);
+  const InstructionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,34 +19,50 @@ class InstructionsScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Instructions',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Instructions',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildInstructionItem(
+                      icon: Icons.person,
+                      text: 'Start trial to watch videos.',
+                    ),
+                    _buildInstructionItem(
+                      icon: Icons.admin_panel_settings,
+                      text: 'Contact the super administrator for admin access.',
+                    ),
+                    _buildInstructionItem(
+                      icon: Icons.category,
+                      text: 'Explore video categories to find content.',
+                    ),
+                    _buildInstructionItem(
+                      icon: Icons.feedback,
+                      text:
+                          'Leave feedback on videos to improve your experience.',
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-              _buildInstructionItem(
-                icon: Icons.person,
-                text: 'Start trial to watch videos.',
+              CustomButton(
+                title: 'Start Trial',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CategoryScreen(),
+                    ),
+                  );
+                },
               ),
-              _buildInstructionItem(
-                icon: Icons.admin_panel_settings,
-                text: 'Contact the super administrator for admin access.',
-              ),
-              _buildInstructionItem(
-                icon: Icons.category,
-                text: 'Explore video categories to find content.',
-              ),
-              _buildInstructionItem(
-                icon: Icons.feedback,
-                text: 'Leave feedback on videos to improve your experience.',
-              ),
-              const Spacer(),
-              CustomButton(title: 'Start Trial', onPressed: () {}),
               const SizedBox(height: 16),
               CustomButton(
                 title: 'Login as an Admin',
@@ -52,7 +70,9 @@ class InstructionsScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LoginScreen()));
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
                 },
                 color: Colors.transparent,
                 textColor: MyColors.blackColor,

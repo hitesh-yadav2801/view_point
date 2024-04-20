@@ -7,6 +7,7 @@ class Assets {
   static const String animationsOnboard = 'lib/core/assets/animations/onboard.json';
   static const String commonWidgetsCustomButton = 'lib/ui/common_widgets/custom_button.dart';
   static const String commonWidgetsCustomTextfield = 'lib/ui/common_widgets/custom_textfield.dart';
+  static const String constantsAppPadding = 'lib/core/constants/app_padding.dart';
   static const String constantsMyColors = 'lib/core/constants/my_colors.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String libMain = 'lib/main.dart';
@@ -15,6 +16,7 @@ class Assets {
   static const String screensInstructionsScreen = 'lib/ui/screens/instructions_screen.dart';
   static const String screensLoginScreen = 'lib/ui/screens/login_screen.dart';
   static const String screensOnboardingScreen = 'lib/ui/screens/onboarding_screen.dart';
+  static const String screensOtpScreen = 'lib/ui/screens/otp_screen.dart';
   static const String screensSplashScreen = 'lib/ui/screens/splash_screen.dart';
 
 }
