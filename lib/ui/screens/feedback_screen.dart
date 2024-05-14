@@ -7,6 +7,7 @@ import 'package:view_point/data/models/category_model.dart';
 import 'package:view_point/data/models/response_model.dart';
 import 'package:view_point/ui/common_widgets/custom_button.dart';
 import 'package:view_point/ui/screens/category_screen.dart';
+import 'package:view_point/ui/screens/instructions_screen.dart';
 
 class FeedbackScreen extends StatefulWidget {
   final CategoryModel categoryModel;
@@ -40,7 +41,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     final response = ResponseModel(
       questions: widget.categoryModel.questions,
       answers: ratings,
-      documentReference: widget.categoryModel.documentReference,
+      documentReference: widget.categoryModel.documentReference!,
     );
     context.read<FeedbackBloc>().add(
       FeedbackSubmitEvent(responseModel: response),
@@ -79,7 +80,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const CategoryScreen()),
+                        MaterialPageRoute(builder: (context) => const InstructionsScreen()),
                             (route) => false,
                       );
                     },

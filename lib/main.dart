@@ -2,14 +2,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:view_point/bloc_observer.dart';
 import 'package:view_point/blocs/category_bloc/category_bloc.dart';
 import 'package:view_point/blocs/feedback_bloc/feedback_bloc.dart';
+import 'package:view_point/blocs/login_bloc/login_bloc.dart';
+import 'package:view_point/blocs/signup_bloc/signup_bloc.dart';
 import 'package:view_point/core/constants/my_colors.dart';
 import 'package:view_point/firebase_options.dart';
 import 'package:view_point/ui/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = MyBlocObserver();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -21,6 +25,12 @@ void main() async {
         ),
         BlocProvider(
           create: (context) => FeedbackBloc(),
+        ),
+        BlocProvider(
+          create: (context) => LoginBloc(),
+        ),
+        BlocProvider(
+          create: (context) => SignupBloc(),
         ),
       ],
       child: const MyApp(),

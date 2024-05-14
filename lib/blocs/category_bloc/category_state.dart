@@ -13,6 +13,8 @@ final class CategoryLoadedSuccessState extends CategoryState {
   CategoryLoadedSuccessState(this.categories);
 }
 
+final class CategoryAddSuccessState extends CategoryState {}
+
 final class CategoryErrorState extends CategoryState {
   final String message;
 

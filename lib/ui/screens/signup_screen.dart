@@ -1,48 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:view_point/blocs/login_bloc/login_bloc.dart';
+import 'package:view_point/blocs/signup_bloc/signup_bloc.dart';
 import 'package:view_point/core/constants/my_colors.dart';
+import 'package:view_point/data/models/user_model.dart';
 import 'package:view_point/ui/common_widgets/custom_button.dart';
 import 'package:view_point/ui/common_widgets/custom_textfield.dart';
-import 'package:view_point/ui/screens/login_otp_screen.dart';
-import 'package:view_point/ui/screens/signup_screen.dart';
+import 'package:view_point/ui/screens/login_screen.dart';
+import 'package:view_point/ui/screens/signup_otp_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final phoneNumberController = TextEditingController();
+  final nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
+    return BlocConsumer<SignupBloc, SignupState>(
       listener: (context, state) {
-        if (state is LoginScreenErrorState) {
+        if (state is LoginScreenErrorStateSignUp) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error),
             ),
           );
-        } else if (state is PhoneAuthCodeSentSuccessState) {
+        } else if (state is PhoneAuthCodeSentSuccessStateSignUp) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginOtpScreen(
+              builder: (context) => SignUpOtpScreen(
                 phoneNumber: phoneNumberController.text,
                 verificationId: state.verificationId,
+                userModel: UserModel(
+                  name: nameController.text,
+                  phoneNumber: phoneNumberController.text,
+                  registrationFlag: true,
+                  isAdmin: false,
+                ),
               ),
             ),
           );
         }
       },
       builder: (context, state) {
-        if (state is LoginScreenLoadingState) {
+        if (state is LoginScreenLoadingStateSignUp) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -80,6 +88,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Align(
                         alignment: Alignment.topLeft,
                         child: Text(
+                          'Full Name',
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      CustomTextField(
+                        hintText: 'Enter your name',
+                        controller: nameController,
+                        keyboardType: TextInputType.phone,
+                        prefixIcon: const Icon(Icons.person),
+                      ),
+                      const SizedBox(height: 20),
+                      const Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
                           'Phone Number',
                         ),
                       ),
@@ -95,9 +117,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         title: 'Get OTP',
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            context.read<LoginBloc>().add(
-                                  SendOtpToPhoneEvent(
+                            context.read<SignupBloc>().add(
+                                  SignUpSendOtpToPhoneEvent(
                                     phoneNumber: phoneNumberController.text,
+                                    userModel: UserModel(
+                                      name: nameController.text,
+                                      phoneNumber: phoneNumberController.text,
+                                      registrationFlag: true,
+                                      isAdmin: false,
+                                    ),
                                   ),
                                 );
                           }
@@ -106,27 +134,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpScreen(),
-                            ),
-                          );
+                          Navigator.pop(context);
                         },
                         child: RichText(
                           text: TextSpan(
-                            text: 'Don\'t have an account? ',
+                            text: 'Already have an account? ',
                             style: Theme.of(context).textTheme.titleMedium,
                             children: [
                               TextSpan(
-                                text: 'Sign Up',
+                                text: 'Log In',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium
                                     ?.copyWith(
-                                  color: MyColors.tertiaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                      color: MyColors.tertiaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ],
                           ),

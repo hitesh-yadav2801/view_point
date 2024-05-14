@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:view_point/data/services/firebase_auth_services.dart';
+import 'package:view_point/ui/screens/admin_panel_screen.dart';
 import 'package:view_point/ui/screens/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,12 +25,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigateToOnboardingScreen() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const OnboardingScreen(),
-        ),
-      );
+      FirebaseAuthServices firebaseAuthServices = FirebaseAuthServices();
+      if(firebaseAuthServices.authentication.currentUser != null) {
+        //print(firebaseAuthServices.authentication.currentUser);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AdminPanelScreen(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const OnboardingScreen(),
+          ),
+        );
+      }
     });
   }
 

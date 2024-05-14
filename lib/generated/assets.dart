@@ -16,7 +16,7 @@ class Assets {
   static const String screensInstructionsScreen = 'lib/ui/screens/instructions_screen.dart';
   static const String screensLoginScreen = 'lib/ui/screens/login_screen.dart';
   static const String screensOnboardingScreen = 'lib/ui/screens/onboarding_screen.dart';
-  static const String screensOtpScreen = 'lib/ui/screens/otp_screen.dart';
+  static const String screensOtpScreen = 'lib/ui/screens/login_otp_screen.dart';
   static const String screensSplashScreen = 'lib/ui/screens/splash_screen.dart';
 
 }
