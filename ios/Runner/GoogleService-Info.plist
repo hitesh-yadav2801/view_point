@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCXtXhc4t9RXVbmAspgCg7PXOEvNRxEWTA</string>
+	<string>AIzaSyAsC8EiVMOx9J-fXG2pDxvXOXk01gbLA6Q</string>
 	<key>GCM_SENDER_ID</key>
-	<string>101750492930</string>
+	<string>865270667482</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.viewPoint</string>
 	<key>PROJECT_ID</key>
-	<string>view-point-c281c</string>
+	<string>view-point-new</string>
 	<key>STORAGE_BUCKET</key>
-	<string>view-point-c281c.appspot.com</string>
+	<string>view-point-new.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:101750492930:ios:16d6c68d9ba317800cfc1b</string>
+	<string>1:865270667482:ios:eab0b732c11ee2a3c3ade3</string>
 </dict>
 </plist>

@@ -29,6 +29,12 @@ class _SignUpOtpScreenState extends State<SignUpOtpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    _otpController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignupBloc, SignupState>(
       listener: (context, state) {
@@ -39,6 +45,11 @@ class _SignUpOtpScreenState extends State<SignUpOtpScreen> {
             ),
           );
         } else if (state is LoginScreenLoadedStateSignUp ) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Please ask for admin approval'),
+            ),
+          );
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(

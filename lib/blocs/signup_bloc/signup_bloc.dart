@@ -19,6 +19,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<SignupEvent>((_, emit) => emit(LoginScreenLoadingStateSignUp()));
     on<SignUpSendOtpToPhoneEvent>((event, emit) async {
       try {
+        print('here');
         await firebaseAuthServices.loginWithPhone(
             phoneNumber: event.phoneNumber,
             verificationCompleted: (PhoneAuthCredential credential) {
@@ -32,6 +33,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
                     verificationId: verificationId, token: refreshToken, userModel: event.userModel)),
             codeAutoRetrievalTimeout: (String verificationId) {});
       } catch (e) {
+        print(e.toString());
         emit(LoginScreenErrorStateSignUp(error: e.toString()));
       }
     });
@@ -73,6 +75,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         });
       } catch (e) {
         //firebaseAuthServices.authentication.signOut();
+        print(e.toString());
         emit(LoginScreenErrorStateSignUp(error: e.toString()));
       }
     });

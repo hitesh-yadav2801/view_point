@@ -26,6 +26,12 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    _otpController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {

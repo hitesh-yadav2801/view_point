@@ -27,7 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       FirebaseAuthServices firebaseAuthServices = FirebaseAuthServices();
       if(firebaseAuthServices.authentication.currentUser != null) {
-        //print(firebaseAuthServices.authentication.currentUser);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

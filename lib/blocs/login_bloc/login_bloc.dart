@@ -63,7 +63,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           resultOfRegistrationStatus = await firebaseAuthServices.checkRegistrationStatus();
           adminStatus = await firebaseAuthServices.checkAdminStatus();
           if (resultOfRegistrationStatus == 'Success') {
-            //print(adminStatus);
             if(adminStatus == true) {
               emit(LoginScreenLoadedState());
             } else {

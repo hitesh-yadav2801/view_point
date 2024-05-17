@@ -93,6 +93,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
             setState(() {
               _selectedFile = null;
             });
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Category added successfully!')));
           } else if(state is CategoryErrorState){
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
@@ -175,7 +176,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       CustomButton(
                         title: 'Submit',
                         onPressed: () {
-                          if (_formKey.currentState!.validate() && _selectedFile != null) {
+                          if (_formKey.currentState!.validate() && _selectedFile != null && _questionControllers.isNotEmpty) {
                             CategoryModel categoryModel = CategoryModel(
                               categoryName: _categoryNameController.text,
                               questions: _questionControllers.map((controller) => controller.text).toList(),

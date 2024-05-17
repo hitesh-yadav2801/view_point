@@ -9,29 +9,25 @@ class FirebaseServices {
   static Future<void> postCategories(
       {required CategoryModel categoryModel, required File file}) async {
     try {
-      print('hello');
-      // Reference storageReference = FirebaseStorage.instance
-      //     .ref()
-      //     .child('videos/${DateTime.now().millisecondsSinceEpoch}');
-      // UploadTask uploadTask = storageReference.putFile(file);
-      // print('hello1');
-      // TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null).catchError((error) {
-      //   print('Upload error: $error');
-      //   throw error;
-      // });
-      // print('hello2');
-      //
-      // String downloadURL = await taskSnapshot.ref.getDownloadURL();
-      // print(downloadURL);
-      String downloadURL = 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('videos/${DateTime.now().millisecondsSinceEpoch}');
+      UploadTask uploadTask = storageReference.putFile(file);
+
+      TaskSnapshot taskSnapshot =
+          await uploadTask.whenComplete(() => null).catchError((error) {
+        throw error;
+      });
+
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+      //String downloadURL = 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
 
       CategoryModel updatedCategoryModel =
           categoryModel.copyWith(videoUrl: downloadURL);
 
-      DocumentReference documentReference = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('categories')
           .add(updatedCategoryModel.toMap());
-      print(documentReference.id);
     } catch (e) {
       rethrow;
     }

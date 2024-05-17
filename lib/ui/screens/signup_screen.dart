@@ -22,6 +22,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    phoneNumberController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignupBloc, SignupState>(
       listener: (context, state) {
@@ -78,7 +85,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         repeat: true,
                       ),
                       const Text(
-                        'Admin Panel Login',
+                        'Admin Panel Sign Up',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -95,8 +102,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       CustomTextField(
                         hintText: 'Enter your name',
                         controller: nameController,
-                        keyboardType: TextInputType.phone,
+                        keyboardType: TextInputType.text,
                         prefixIcon: const Icon(Icons.person),
+
                       ),
                       const SizedBox(height: 20),
                       const Align(

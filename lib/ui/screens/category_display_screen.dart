@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:view_point/core/constants/my_colors.dart';
 import 'package:view_point/data/models/category_model.dart';
-import 'package:view_point/ui/screens/VideoScreen.dart';
+import 'package:view_point/ui/screens/view_360.dart';
 
 class CategoryDisplayScreen extends StatefulWidget {
   final CategoryModel categoryModel;
@@ -34,7 +34,7 @@ class _CategoryDisplayScreenState extends State<CategoryDisplayScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => VideoScreen(
+                builder: (context) => NavigatorButton(
                   categoryModel: widget.categoryModel,
                 ),
               ),

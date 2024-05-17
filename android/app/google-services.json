@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "101750492930",
-    "project_id": "view-point-c281c",
-    "storage_bucket": "view-point-c281c.appspot.com"
+    "project_number": "865270667482",
+    "project_id": "view-point-new",
+    "storage_bucket": "view-point-new.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:101750492930:android:d6d5e8c5196ccf7a0cfc1b",
+        "mobilesdk_app_id": "1:865270667482:android:b012e0cb452b9563c3ade3",
         "android_client_info": {
           "package_name": "com.example.view_point"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCwdYgoc-L8DG7BruVAXp0SosfLmn-dhvg"
+          "current_key": "AIzaSyC0QQeHOjc6CyCooh-B44WlExWnGMuDt-I"
         }
       ],
       "services": {
