@@ -51,7 +51,7 @@ class _View360State extends State<View360> {
 
   @override
   void initState() {
-    videoUrl = widget.categoryModel.videoUrl;
+    //videoUrl = widget.categoryModel.videoUrl;
     super.initState();
   }
 

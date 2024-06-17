@@ -20,50 +20,59 @@ class AdminPanelScreen extends StatefulWidget {
 class _AdminPanelScreenState extends State<AdminPanelScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _categoryNameController = TextEditingController();
-  final List<TextEditingController> _questionControllers = [
-    TextEditingController()
-  ];
-
-  File? _selectedFile;
-
-  Future<void> _selectFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      setState(() {
-        _selectedFile = File(result.files.single.path!);
-      });
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('No file selected')));
-    }
-  }
+  final List<VideoInput> _videoInputs = [VideoInput(onRemove: null)];
 
   @override
   void dispose() {
     _categoryNameController.dispose();
-    for (var controller in _questionControllers) {
-      controller.dispose();
+    for (var videoInput in _videoInputs) {
+      videoInput.dispose();
     }
     super.dispose();
   }
 
+  void _removeVideoInput(VideoInput videoInput) {
+    setState(() {
+      _videoInputs.remove(videoInput);
+    });
+  }
+  bool _validateInputs() {
+    if (_categoryNameController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Category Name cannot be empty')));
+      return false;
+    }
+
+    for (var videoInput in _videoInputs) {
+      if (videoInput.selectedFile == null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Please select a video file for each video input')));
+        return false;
+      }
+      for (var controller in videoInput.questionControllers) {
+        if (controller.text.isEmpty) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Questions cannot be empty')));
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme
-            .of(context)
-            .primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text('Admin Panel'),
         actions: [
           BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state is LogoutSuccessStateLogin) {
                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (context) => const OnboardingScreen()),
+                  MaterialPageRoute(builder: (context) => const OnboardingScreen()),
                       (route) => false,
                 );
               } else if (state is LoginScreenErrorState) {
@@ -84,22 +93,20 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       ),
       body: BlocConsumer<CategoryBloc, CategoryState>(
         listener: (context, state) {
-          if(state is CategoryAddSuccessState) {
+          if (state is CategoryAddSuccessState) {
             _categoryNameController.clear();
-            for (var controller in _questionControllers) {
-              controller.clear();
-            }
-            _questionControllers.removeRange(1, _questionControllers.length);
             setState(() {
-              _selectedFile = null;
+              _videoInputs.clear();
+              _videoInputs.add(VideoInput(onRemove: null));
             });
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Category added successfully!')));
-          } else if(state is CategoryErrorState){
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('Category added successfully!')));
+          } else if (state is CategoryErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
-          if(state is CategoryLoadingState) {
+          if (state is CategoryLoadingState) {
             return const Center(child: CircularProgressIndicator());
           }
           return SafeArea(
@@ -118,72 +125,44 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                       const SizedBox(height: 16),
                       ListView.builder(
                         shrinkWrap: true,
-                        itemCount: _questionControllers.length,
+                        itemCount: _videoInputs.length,
                         itemBuilder: (context, index) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: CustomTextField(
-                                    controller: _questionControllers[index],
-                                    hintText: 'Question ${index + 1}',
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.remove),
-                                onPressed: () {
-                                  setState(() {
-                                    _questionControllers.removeAt(index);
-                                  });
-                                },
-                              ),
-                            ],
-                          );
+                          return _videoInputs[index];
                         },
                       ),
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: () {
                           setState(() {
-                            _questionControllers.add(TextEditingController());
+                            _videoInputs.add(VideoInput(onRemove: _removeVideoInput));
                           });
                         },
-                      ),
-                      const SizedBox(height: 16),
-                      if(_selectedFile != null)
-                        Container(
-                          color: Colors.blue.shade50,
-                          child: Text(_selectedFile!.path),
-                        ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: CustomButton(
-                              onPressed: _selectFile,
-                              title: 'Select File',
-                              color: Colors.transparent,
-                              textColor: Colors.black,
-                            ),
-                          ),
-                        ],
                       ),
                       const SizedBox(height: 40),
                       CustomButton(
                         title: 'Submit',
                         onPressed: () {
-                          if (_formKey.currentState!.validate() && _selectedFile != null && _questionControllers.isNotEmpty) {
+                          if (_formKey.currentState!.validate() && _validateInputs() ) {
+                            List<Video> videos = _videoInputs.map((videoInput) {
+                              return Video(
+                                videoUrl: '', // Empty string for videoUrl
+                                questions: videoInput.questionControllers.map((controller) => controller.text).toList(),
+                              );
+                            }).toList();
+
+                            List<File> videoFiles = _videoInputs.map((videoInput) {
+                              return videoInput.selectedFile!;
+                            }).toList();
+
                             CategoryModel categoryModel = CategoryModel(
                               categoryName: _categoryNameController.text,
-                              questions: _questionControllers.map((controller) => controller.text).toList(),
-                              videoUrl: '',
-                              //documentReference: FirebaseFirestore.instance.collection('categories').doc(),
+                              videos: videos,
                             );
-                            context.read<CategoryBloc>().add(CategoryAddEvent(categoryModel: categoryModel, file: _selectedFile!));
+
+                            context.read<CategoryBloc>().add(CategoryAddEvent(
+                              categoryModel: categoryModel,
+                              files: videoFiles,
+                            ));
                           }
                         },
                       ),
@@ -195,6 +174,105 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
           );
         },
       ),
+    );
+  }
+}
+
+class VideoInput extends StatefulWidget {
+  final List<TextEditingController> questionControllers = [TextEditingController()];
+  final Function(VideoInput)? onRemove;
+
+  File? selectedFile;
+
+  VideoInput({super.key, this.onRemove});
+
+  @override
+  _VideoInputState createState() => _VideoInputState();
+
+  void dispose() {
+    for (var controller in questionControllers) {
+      controller.dispose();
+    }
+  }
+}
+
+class _VideoInputState extends State<VideoInput> {
+  Future<void> _selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
+
+    if (result != null) {
+      setState(() {
+        widget.selectedFile = File(result.files.single.path!);
+      });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('No file selected')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (widget.onRemove != null)
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              icon: const Icon(Icons.remove_circle),
+              onPressed: () {
+                widget.onRemove!(widget);
+              },
+            ),
+          ),
+        if (widget.selectedFile != null)
+          Container(
+            color: Colors.blue.shade50,
+            child: Text(widget.selectedFile!.path),
+          ),
+        CustomButton(
+          onPressed: _selectFile,
+          title: 'Select Video File',
+          color: Colors.transparent,
+          textColor: Colors.black,
+        ),
+        const SizedBox(height: 16),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.questionControllers.length,
+          itemBuilder: (context, index) {
+            return Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: CustomTextField(
+                      controller: widget.questionControllers[index],
+                      hintText: 'Question ${index + 1}',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.remove),
+                  onPressed: () {
+                    setState(() {
+                      widget.questionControllers.removeAt(index);
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              widget.questionControllers.add(TextEditingController());
+            });
+          },
+        ),
+        const Divider(thickness: 1),
+      ],
     );
   }
 }

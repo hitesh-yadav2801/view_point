@@ -24,7 +24,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   @override
   void initState() {
     super.initState();
-    ratings = List<String>.filled(widget.categoryModel.questions.length, '0');
+    //ratings = List<String>.filled(widget.categoryModel.questions.length, '0');
   }
 
   void _submitFeedback() async {
@@ -38,14 +38,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       return;
     }
 
-    final response = ResponseModel(
-      questions: widget.categoryModel.questions,
-      answers: ratings,
-      documentReference: widget.categoryModel.documentReference!,
-    );
-    context.read<FeedbackBloc>().add(
-      FeedbackSubmitEvent(responseModel: response),
-    );
+    // final response = ResponseModel(
+    //   questions: widget.categoryModel.questions,
+    //   answers: ratings,
+    //   documentReference: widget.categoryModel.documentReference!,
+    // );
+    // context.read<FeedbackBloc>().add(
+    //   FeedbackSubmitEvent(responseModel: response),
+    // );
   }
 
   @override
@@ -110,51 +110,51 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               padding: AppPadding.mainPadding,
               child: Column(
                 children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: widget.categoryModel.questions.length,
-                      itemBuilder: (context, index) {
-                        final question = widget.categoryModel.questions[index];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              question,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                for (int i = 1; i <= 5; i++)
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '$i', // Display the number
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                      Radio<String>(
-                                        value: i.toString(),
-                                        groupValue: ratings[index],
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            ratings[index] = value!;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                            const Divider(),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: ListView.builder(
+                  //     itemCount: widget.categoryModel.questions.length,
+                  //     itemBuilder: (context, index) {
+                  //       final question = widget.categoryModel.questions[index];
+                  //       return Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             question,
+                  //             style: const TextStyle(
+                  //               fontSize: 18,
+                  //               fontWeight: FontWeight.w600,
+                  //             ),
+                  //           ),
+                  //           const SizedBox(height: 8),
+                  //           Row(
+                  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //             children: [
+                  //               for (int i = 1; i <= 5; i++)
+                  //                 Row(
+                  //                   children: [
+                  //                     Text(
+                  //                       '$i', // Display the number
+                  //                       style: const TextStyle(fontSize: 16),
+                  //                     ),
+                  //                     Radio<String>(
+                  //                       value: i.toString(),
+                  //                       groupValue: ratings[index],
+                  //                       onChanged: (String? value) {
+                  //                         setState(() {
+                  //                           ratings[index] = value!;
+                  //                         });
+                  //                       },
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //             ],
+                  //           ),
+                  //           const Divider(),
+                  //         ],
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                   CustomButton(
                     title: 'Submit Feedback',
                     onPressed: _submitFeedback,

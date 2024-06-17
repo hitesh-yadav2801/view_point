@@ -6,24 +6,33 @@ import 'package:view_point/data/models/response_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseServices {
-  static Future<void> postCategories(
-      {required CategoryModel categoryModel, required File file}) async {
+  static Future<void> postCategories({
+    required CategoryModel categoryModel,
+    required List<File> files,
+  }) async {
     try {
-      Reference storageReference = FirebaseStorage.instance
-          .ref()
-          .child('videos/${DateTime.now().millisecondsSinceEpoch}');
-      UploadTask uploadTask = storageReference.putFile(file);
+      List<Video> updatedVideos = [];
 
-      TaskSnapshot taskSnapshot =
-          await uploadTask.whenComplete(() => null).catchError((error) {
-        throw error;
-      });
+      for (int i = 0; i < files.length; i++) {
+        File file = files[i];
 
-      String downloadURL = await taskSnapshot.ref.getDownloadURL();
-      //String downloadURL = 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('videos/${DateTime.now().millisecondsSinceEpoch}_$i');
+        UploadTask uploadTask = storageReference.putFile(file);
 
-      CategoryModel updatedCategoryModel =
-          categoryModel.copyWith(videoUrl: downloadURL);
+        TaskSnapshot taskSnapshot =
+        await uploadTask.whenComplete(() => null).catchError((error) {
+          throw error;
+        });
+
+        String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+        Video updatedVideo = categoryModel.videos[i].copyWith(videoUrl: downloadURL);
+        updatedVideos.add(updatedVideo);
+      }
+
+      CategoryModel updatedCategoryModel = categoryModel.copyWith(videos: updatedVideos);
 
       await FirebaseFirestore.instance
           .collection('categories')
@@ -32,6 +41,7 @@ class FirebaseServices {
       rethrow;
     }
   }
+
 
   static Future<List<CategoryModel>> getCategories() async {
     try {

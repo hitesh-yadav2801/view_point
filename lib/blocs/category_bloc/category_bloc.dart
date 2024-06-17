@@ -28,7 +28,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   void _onCategoryAddEvent(CategoryAddEvent event, Emitter<CategoryState> emit) async {
     try {
-      await FirebaseServices.postCategories(categoryModel: event.categoryModel, file: event.file);
+      await FirebaseServices.postCategories(categoryModel: event.categoryModel, files: event.files);
       emit(CategoryAddSuccessState());
     } catch (e) {
       emit(CategoryErrorState(e.toString()));

@@ -9,7 +9,7 @@ final class CategoryLoadEvent extends CategoryEvent {}
 
 final class CategoryAddEvent extends CategoryEvent {
   final CategoryModel categoryModel;
-  final File file;
+  final List<File> files;
 
-  CategoryAddEvent({required this.categoryModel, required this.file});
+  CategoryAddEvent({required this.categoryModel, required this.files});
 }
