@@ -3,49 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:view_point/blocs/feedback_bloc/feedback_bloc.dart';
 import 'package:view_point/core/constants/app_padding.dart';
 import 'package:view_point/core/constants/my_colors.dart';
-import 'package:view_point/data/models/category_model.dart';
 import 'package:view_point/data/models/response_model.dart';
 import 'package:view_point/ui/common_widgets/custom_button.dart';
 import 'package:view_point/ui/screens/category_screen.dart';
 import 'package:view_point/ui/screens/instructions_screen.dart';
 
-class FeedbackScreen extends StatefulWidget {
-  final CategoryModel categoryModel;
+class FeedbackScreen extends StatelessWidget {
+  final ResponseModel responseModel;
 
-  const FeedbackScreen({super.key, required this.categoryModel});
+  const FeedbackScreen({
+    super.key,
+    required this.responseModel,
+  });
 
-  @override
-  State<FeedbackScreen> createState() => _FeedbackScreenState();
-}
-
-class _FeedbackScreenState extends State<FeedbackScreen> {
-  late List<String> ratings;
-
-  @override
-  void initState() {
-    super.initState();
-    //ratings = List<String>.filled(widget.categoryModel.questions.length, '0');
-  }
-
-  void _submitFeedback() async {
-    final allQuestionsAnswered = ratings.every((rating) => rating != '0');
-    if (!allQuestionsAnswered) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please answer every question.'),
-        ),
-      );
-      return;
-    }
-
-    // final response = ResponseModel(
-    //   questions: widget.categoryModel.questions,
-    //   answers: ratings,
-    //   documentReference: widget.categoryModel.documentReference!,
-    // );
-    // context.read<FeedbackBloc>().add(
-    //   FeedbackSubmitEvent(responseModel: response),
-    // );
+  void _submitFeedback(BuildContext context) {
+    context.read<FeedbackBloc>().add(
+      FeedbackSubmitEvent(responseModel: responseModel),
+    );
   }
 
   @override
@@ -80,7 +54,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const InstructionsScreen()),
+                        MaterialPageRoute(builder: (context) => const CategoryScreen()),
                             (route) => false,
                       );
                     },
@@ -103,61 +77,58 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           backgroundColor: MyColors.backgroundColor,
           appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
-            title: Text('${widget.categoryModel.categoryName} Feedback'),
+            title: const Text('Feedback Summary'),
           ),
           body: SafeArea(
             child: Padding(
               padding: AppPadding.mainPadding,
               child: Column(
                 children: [
-                  // Expanded(
-                  //   child: ListView.builder(
-                  //     itemCount: widget.categoryModel.questions.length,
-                  //     itemBuilder: (context, index) {
-                  //       final question = widget.categoryModel.questions[index];
-                  //       return Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           Text(
-                  //             question,
-                  //             style: const TextStyle(
-                  //               fontSize: 18,
-                  //               fontWeight: FontWeight.w600,
-                  //             ),
-                  //           ),
-                  //           const SizedBox(height: 8),
-                  //           Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //             children: [
-                  //               for (int i = 1; i <= 5; i++)
-                  //                 Row(
-                  //                   children: [
-                  //                     Text(
-                  //                       '$i', // Display the number
-                  //                       style: const TextStyle(fontSize: 16),
-                  //                     ),
-                  //                     Radio<String>(
-                  //                       value: i.toString(),
-                  //                       groupValue: ratings[index],
-                  //                       onChanged: (String? value) {
-                  //                         setState(() {
-                  //                           ratings[index] = value!;
-                  //                         });
-                  //                       },
-                  //                     ),
-                  //                   ],
-                  //                 ),
-                  //             ],
-                  //           ),
-                  //           const Divider(),
-                  //         ],
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: responseModel.videoResponses.length,
+                      itemBuilder: (context, videoIndex) {
+                        final videoResponse = responseModel.videoResponses[videoIndex];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Video ${videoIndex + 1}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                             const Divider(thickness: 1, color: Colors.black,),
+                            ...List.generate(videoResponse.questions.length, (qIndex) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    videoResponse.questions[qIndex],
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Answer: ${videoResponse.answers[qIndex]}',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const Divider(),
+                                ],
+                              );
+                            }),
+                            const SizedBox(height: 10),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
                   CustomButton(
-                    title: 'Submit Feedback',
-                    onPressed: _submitFeedback,
+                    title: 'Submit All Feedback',
+                    onPressed: () => _submitFeedback(context),
                   ),
                 ],
               ),
